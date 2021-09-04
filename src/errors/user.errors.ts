@@ -1,5 +1,5 @@
 // error if user alrady exist
-export class UserExist extends Error {
+export  class UserExist extends Error {
   constructor(message: string) {
     super(message);
     this.name = "UserExist";
