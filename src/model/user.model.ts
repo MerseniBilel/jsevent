@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import { StringLocale } from "yup/lib/locale";
 
 //create interface for user
 export interface UserDocument extends mongoose.Document {
@@ -7,6 +8,7 @@ export interface UserDocument extends mongoose.Document {
   name: string;
   lastname: string;
   password: string;
+  image : string;
   createdAt: Date;
   updatedAt: Date;
   comparePasswords(pswd: string): Promise<void>;
@@ -18,6 +20,7 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true },
     lastname: { type: String, required: true },
     password: { type: String, required: true },
+    image : {type : String, required: false, default : "https://avatars.dicebear.com/api/bottts/blue.svg"}
   },
   { timestamps: true }
 );

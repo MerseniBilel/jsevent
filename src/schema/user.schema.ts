@@ -8,6 +8,7 @@ export const createUserSchema = object({
       .required("Email is required.")
       .min(6, "Password is too short - Should be 6 char minimum."),
     email: string().email("Email must be valied").required("Email is required"),
+    image : string(),
   }),
 });
 
@@ -16,6 +17,7 @@ export const CreateEventSchema = object({
     name: string().required("name of the event is required"),
     description: string().required("event description is required"),
     eventimg : string().required("event image url is required"),
+    eventdate : string().required("event date required."),
     eventLeader : object({
         leaderName : string().required("Leader name is required"),
         leaderLastname : string().required("Leader lastname is required"),

@@ -11,6 +11,7 @@ export interface eventDocument extends mongoose.Document{
     description: string;
     eventimg : string;
     goingMembers : number;
+    eventdate : Date;
     eventLeader: eventLeaderDocument;
 }
 
@@ -20,6 +21,7 @@ const eventSchema = new mongoose.Schema<eventDocument>(
         description : {type : String, required : true},
         eventimg : {type : String, required: true},
         goingMembers : {type: Number, default: 0},
+        eventdate : {type: Date},
         eventLeader : {
             leaderName : {type : String, required:true},
             leaderLastname : {type : String, required: true},
