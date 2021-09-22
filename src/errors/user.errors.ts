@@ -56,3 +56,34 @@ export class UnkownError extends Error {
     return this.name + " : " + this.message;
   }
 }
+
+// incorrect password
+export  class IncorrectPass extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "IncorrectPass";
+
+    //set the instanceof value to the class name
+    Object.setPrototypeOf(this, IncorrectPass.prototype);
+  }
+
+  showerror(): string {
+    return this.name + " : " + this.message;
+  }
+}
+
+
+// user not found
+export class UserNotFound extends Error{
+  constructor(message: string){
+    super(message);
+    this.name = "User Not Found";
+  
+    // set the instance of value to the class name
+    Object.setPrototypeOf(this, UserNotFound.prototype);
+  }
+
+  showerror(): string{
+    return this.name + " : " + this.message
+  }
+}
