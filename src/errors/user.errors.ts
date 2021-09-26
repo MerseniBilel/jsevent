@@ -57,6 +57,22 @@ export class UnkownError extends Error {
   }
 }
 
+//cant delete user 
+export  class CantDeleteUser extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "CantDeleteUser";
+
+    //set the instanceof value to the class name
+    Object.setPrototypeOf(this, CantDeleteUser.prototype);
+  }
+
+  showerror(): string {
+    return this.name + " : " + this.message;
+  }
+}
+
+
 // incorrect password
 export  class IncorrectPass extends Error {
   constructor(message: string) {

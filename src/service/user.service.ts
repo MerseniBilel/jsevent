@@ -1,5 +1,6 @@
 import { DocumentDefinition } from "mongoose";
 import User, { UserDocument } from "../model/user.model";
+import Archive, {ArchiveDocument} from "../model/archive.model";
 import bcrypt from "bcrypt";
 import config from "config";
 // custom error
@@ -9,10 +10,36 @@ import {
   CantCreateUser,
   IncorrectPass,
   UserNotFound,
-  UnkownError
+  UnkownError,
+  CantDeleteUser,
 } from "../errors/user.errors";
 import log from "../logger";
 
+
+export async function readUsers(){
+  try {
+    return await User.find();
+  } catch (error) {
+    throw Error("server error cant fetch users");
+  }
+}
+
+
+//delete user
+export async function deleteUser(input: string) {
+  try {
+    const dUser = User.findOneAndDelete({ _id: input });
+    const archive = await Archive.find();
+    const updateArchive = await Archive.updateOne(
+    { _id: archive[0]._id}, 
+    { $push: { deletedUser: dUser } },
+    
+    );
+    return dUser;
+  } catch (error) {
+    throw new CantDeleteUser("error while deleting the user");
+  }
+}
 
 // create user function
 export async function createUser(input: DocumentDefinition<UserDocument>) {
@@ -37,36 +64,38 @@ export async function createUser(input: DocumentDefinition<UserDocument>) {
 }
 
 // login a user
-export async function login(input: any){
+export async function login(input: any) {
   try {
-    const userExist : boolean = await checkifuserExist(input.email);
-    if(!userExist){
+    const userExist: boolean = await checkifuserExist(input.email);
+    if (!userExist) {
       throw new UserNotFound("User Not Fount");
     }
-    const user:any = await User.findOne({email: input.email});
+    const user: any = await User.findOne({ email: input.email });
     console.log(user);
-    const compare : boolean = await comparePassword(input.password, user.password);
-    if(compare == false){
+    const compare: boolean = await comparePassword(
+      input.password,
+      user.password
+    );
+    if (compare == false) {
       throw new IncorrectPass("password is icorrect");
     }
     return user;
-
   } catch (error) {
     console.log(error);
-    if(error instanceof IncorrectPass){
+    if (error instanceof IncorrectPass) {
       log.error(error.showerror());
       throw new IncorrectPass(error.message);
-    }else if (error instanceof UserNotFound){
+    } else if (error instanceof UserNotFound) {
       log.error(error.showerror());
       throw new UserNotFound(error.message);
-    }else {
+    } else {
       throw new UnkownError("Error while Log in");
     }
   }
 }
 
-export async function comparePassword(passwd : string, dbpasswd : string){
-  return bcrypt.compare(passwd, dbpasswd).catch((e)=> false);
+export async function comparePassword(passwd: string, dbpasswd: string) {
+  return bcrypt.compare(passwd, dbpasswd).catch((e) => false);
 }
 
 // check if user exist function
@@ -82,10 +111,3 @@ export async function checkifuserExist(userEmail: string): Promise<boolean> {
   }
 }
 
-// find user function
-export async function findUser() {
-  try {
-  } catch (error) {
-    throw new CantSearchUser("Error while searching for a user");
-  }
-}

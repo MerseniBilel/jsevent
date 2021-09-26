@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
-import { StringLocale } from "yup/lib/locale";
 
 //create interface for user
 export interface UserDocument extends mongoose.Document {
@@ -11,7 +9,6 @@ export interface UserDocument extends mongoose.Document {
   image : string;
   createdAt: Date;
   updatedAt: Date;
-  comparePasswords(pswd: string): Promise<void>;
 }
 
 const userSchema = new mongoose.Schema(
@@ -27,10 +24,5 @@ const userSchema = new mongoose.Schema(
 
 const User = mongoose.model<UserDocument>("User", userSchema);
 
-//Compare password methode
-userSchema.methods.comparePasswords = async function (pswd : string ){
-    const user = this as UserDocument
-    return bcrypt.compare(pswd, user.password).catch((e)=> false);
-}
 
 export default User;
