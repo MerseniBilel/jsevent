@@ -4,19 +4,19 @@ import Event,{eventDocument} from "../model/event.model";
 
 
 export interface ArchiveDocument extends mongoose.Document {
-  deleteUser : typeof User[];
-  deletedEvent : typeof Event[];
+  deletedUser : UserDocument[],
+  deletedEvent : eventDocument[]
 }
 
 const archiveSchema = new mongoose.Schema(
   {
     deletedUser: {
         type: [],
-        default : undefined
+        default : []
     },
     deletedEvent : {
         type: [],
-        default: undefined,
+        default: [],
     }
   },
 );

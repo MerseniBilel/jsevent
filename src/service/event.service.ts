@@ -1,7 +1,7 @@
 import { DocumentDefinition } from "mongoose";
 import { CantCreateEvent, UnknownError } from "../errors/event.errors";
-import log from "../logger";
 import Event, { eventDocument } from "../model/event.model";
+import Archive from "../model/archive.model";
 
 export async function createEvent(input: DocumentDefinition<eventDocument>) {
   try {
@@ -12,8 +12,37 @@ export async function createEvent(input: DocumentDefinition<eventDocument>) {
   }
 }
 
-export async function updateEvent() {}
+export async function updateEvent(input : string) {
+  try {
+    const eventToUpdate = await Event.findOne({_id : input});
+    if(eventToUpdate){
+      eventToUpdate.goingMembers++;
+      await eventToUpdate.save();
+    }
+    return eventToUpdate
+  } catch (error) {
+    throw Error("error while updating the going number");
+  }
+}
 
-export async function deleteEvent() {}
+export async function deleteEvent(input : string) {
+  try {
+    const eventToDelete = await Event.findOneAndDelete({_id : input});
+    const archive = await Archive.find();
+    if(eventToDelete){
+      archive[0].deletedEvent.push(eventToDelete);
+      await archive[0].save();
+    }
+    return eventToDelete;
+  } catch (error) {
+    throw Error("error while deleting the event")
+  }
+}
 
-export async function getEvents() {}
+export async function getEvents() {
+  try {
+    return await Event.find();
+  } catch (error) {
+    throw Error("error while trying to fetch events")
+  }
+}

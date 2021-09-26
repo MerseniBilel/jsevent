@@ -28,13 +28,12 @@ export async function readUsers(){
 //delete user
 export async function deleteUser(input: string) {
   try {
-    const dUser = User.findOneAndDelete({ _id: input });
+    const dUser = await User.findOneAndDelete({ _id: input });
     const archive = await Archive.find();
-    const updateArchive = await Archive.updateOne(
-    { _id: archive[0]._id}, 
-    { $push: { deletedUser: dUser } },
-    
-    );
+    if(dUser){
+      archive[0].deletedUser.push(dUser);
+      await archive[0].save();
+    }
     return dUser;
   } catch (error) {
     throw new CantDeleteUser("error while deleting the user");
