@@ -41,7 +41,7 @@ def generateEvent():
     newEvent = {
         "name" : fake.last_name(),
         "description" : str(fake.text()),
-        "eventimg" : "https://avatars.dicebear.com/api/{}/{}.svg".format(random.choice(spritesOptions),fake.first_name() ),
+        "eventimg" : followLink("https://source.unsplash.com/640x904/?event"),
         "eventdate": date.today().strftime("%Y-%m-%d"),
         "eventLeader" : {
             "leaderName" : fake.first_name(),
@@ -51,6 +51,10 @@ def generateEvent():
     }
     jsonEvent = json.dumps(newEvent)
     return jsonEvent
+
+def followLink(link):
+    response = requests.get(link);
+    return response.url;
 
 def main():
     if platform == "linux" or platform == "linux2":

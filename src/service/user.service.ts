@@ -64,6 +64,11 @@ export async function createUser(input: DocumentDefinition<UserDocument>) {
 
 // login a user
 export async function login(input: any) {
+      const sleep = (milliseconds : number) => {
+        return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
+
+    await sleep(500)
   try {
     const userExist: boolean = await checkifuserExist(input.email);
     if (!userExist) {
